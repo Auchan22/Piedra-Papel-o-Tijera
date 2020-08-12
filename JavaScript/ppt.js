@@ -91,6 +91,8 @@ const Tablero = document.querySelector(".tablero");
 const Piedra = document.getElementById("pi");
 const Papel = document.getElementById("pa");
 const Tijera = document.getElementById("ti");
+let startbtn = document.getElementById("start");
+let reiniciarbtn = document.getElementById("restart");
 
 function EleccionCpu(){
     const opciones = ["pi", "pa", "ti"];
@@ -112,22 +114,46 @@ function convertir(opcionL){
 function ganar(opcionUser, opcionCpu){
     user_v++;
     userscore.innerHTML = user_v;
-    Result.innerHTML = "El usuario ganó con la eleccion: " + convertir(opcionUser) + " ,frente a la eleccion de la I.A, que fue: " + convertir(opcionCpu) + "."
+    Result.innerHTML = "El usuario ganó con la eleccion: " + convertir(opcionUser) + ", frente a la eleccion de la I.A, que fue: " + convertir(opcionCpu) + "."
+    const eleccionuser = document.getElementById(opcionUser);
+    const eleccioncpu = document.getElementById(opcionCpu);
+    eleccionuser.classList.add("gano");
+    eleccioncpu.classList.add("perdio");
+    setTimeout(function(){
+        eleccionuser.classList.remove("gano");
+        eleccioncpu.classList.remove("perdio");
+    }, 1000);
 }
 
 function perder(opcionUser, opcionCpu){
     cpu_v++;
     cpuscore.innerHTML = cpu_v;
-    Result.innerHTML = "La I.A ganó con la eleccion: " + convertir(opcionCpu) + " ,frente a la eleccion del Usuario, que fue: " + convertir(opcionUser) + "."
+    Result.innerHTML = "La I.A ganó con la eleccion: " + convertir(opcionCpu) + ", frente a la eleccion del Usuario, que fue: " + convertir(opcionUser) + "."
+    const eleccionuser = document.getElementById(opcionUser);
+    const eleccioncpu = document.getElementById(opcionCpu);
+    eleccionuser.classList.add("perdio");
+    eleccioncpu.classList.add("gano");
+    setTimeout(function(){
+        eleccionuser.classList.remove("perdio");
+        eleccioncpu.classList.remove("gano");
+    }, 1000);
 }
 
 function empate(opcionUser, opcionCpu){
-    Result.innerHTML = "Hubo un empate";
+    Result.innerHTML = "Hubo un empate, ambos eligieron: " +convertir(opcionUser)+ ".";
+    const eleccionuser = document.getElementById(opcionUser);
+    eleccionuser.classList.add("empate");
+    setTimeout(function(){
+        eleccionuser.classList.remove("empate");
+    }, 1000);
 }
 
 function juego(opcion){
     const eleccionCpu = EleccionCpu();
     const eleccionUser = opcion;
+
+    startbtn.style.display = "none";
+    reiniciarbtn.style.visibility = "visible";
 
     switch(eleccionUser+eleccionCpu){
         case "piti":
@@ -149,6 +175,19 @@ function juego(opcion){
         break;
     }
 }
+
+function reiniciar(){
+    user_v = 0;
+    cpu_v = 0;
+    userscore.innerHTML = user_v;
+    cpuscore.innerHTML = cpu_v;
+
+    reiniciarbtn.style.visibility = "hidden";
+    startbtn.style.display = "block";
+    Result.innerHTML = "";
+}
+
+
 
 function principal(){
     Piedra.addEventListener("click", () => juego("pi"));
